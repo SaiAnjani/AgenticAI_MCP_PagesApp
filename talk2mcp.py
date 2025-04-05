@@ -308,6 +308,32 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                         )
                         print(result.content[0].text)
                         
+                        # Ask for email address to send results
+                        print("\nWould you like to send the results via email? (yes/no)")
+                        email_choice = input().strip().lower()
+                        
+                        if email_choice == "yes":
+                            print("Enter recipient email address:")
+                            recipient_email = input().strip()
+                            
+                            # Prepare email content
+                            email_subject = "Math Calculation Results"
+                            email_message = f"Final Answer: {response_text}\n\n"
+                            email_message += "Calculation Steps:\n"
+                            for resp in iteration_response:
+                                email_message += f"{resp}\n\n"
+                            
+                            # Send email
+                            result = await session.call_tool(
+                                "send_email_via_gmail",
+                                arguments={
+                                    "recipient_email": recipient_email,
+                                    "subject": email_subject,
+                                    "message": email_message
+                                }
+                            )
+                            print(result.content[0].text)
+                        
                         break
 
                     iteration += 1

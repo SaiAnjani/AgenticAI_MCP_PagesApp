@@ -525,6 +525,69 @@ def debug_error(error: str) -> list[base.Message]:
         base.AssistantMessage("I'll help debug that. What have you tried so far?"),
     ]
 
+# Gmail tool
+@mcp.tool()
+def send_email_via_gmail(recipient_email: str, subject: str, message: str) -> dict:
+    """Send an email via Gmail"""
+    print(f"CALLED: send_email_via_gmail(recipient_email: str, subject: str, message: str) -> dict:")
+    try:
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+        
+        # Get Gmail credentials from environment variables
+        sender_email = "os.getenv("GMAIL_USERNAME")"
+        sender_password = os.getenv("GMAIL_APP_PASSWORD")
+        
+        if not sender_email or not sender_password:
+            return {
+                "content": [
+                    TextContent(
+                        type="text",
+                        text="Gmail credentials not found. Please set GMAIL_USERNAME and GMAIL_APP_PASSWORD environment variables."
+                    )
+                ]
+            }
+        
+        # Create message
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+        
+        # Add body
+        msg.attach(MIMEText(message, 'plain'))
+        
+        # Create SMTP session
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        
+        # Login
+        server.login(sender_email, sender_password)
+        
+        # Send email
+        text = msg.as_string()
+        server.sendmail(sender_email, recipient_email, text)
+        server.quit()
+        
+        return {
+            "content": [
+                TextContent(
+                    type="text",
+                    text=f"Email sent successfully to {recipient_email}"
+                )
+            ]
+        }
+    except Exception as e:
+        return {
+            "content": [
+                TextContent(
+                    type="text",
+                    text=f"Error sending email: {str(e)}"
+                )
+            ]
+        }
+
 if __name__ == "__main__":
     # Check if running with mcp dev command
     print("STARTING")
