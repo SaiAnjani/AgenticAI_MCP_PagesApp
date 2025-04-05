@@ -270,43 +270,43 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                         print("\n=== Agent Execution Complete ===")
                         
                         # Open Pages app
-                        result = await session.call_tool("open_pages")
-                        print(result.content[0].text)
+                        # result = await session.call_tool("open_pages")
+                        # print(result.content[0].text)
                         
-                        # Wait for Pages to open
-                        await asyncio.sleep(2)
+                        # # Wait for Pages to open
+                        # await asyncio.sleep(2)
                         
-                        # Create a new document
-                        result = await session.call_tool("create_new_pages_document")
-                        print(result.content[0].text)
+                        # # Create a new document
+                        # result = await session.call_tool("create_new_pages_document")
+                        # print(result.content[0].text)
                         
-                        # Add the final answer text to the document
-                        result = await session.call_tool(
-                            "add_text_to_pages",
-                            arguments={
-                                "text": f"Final Answer: {response_text}\n\n"
-                            }
-                        )
-                        print(result.content[0].text)
+                        # # Add the final answer text to the document
+                        # result = await session.call_tool(
+                        #     "add_text_to_pages",
+                        #     arguments={
+                        #         "text": f"Final Answer: {response_text}\n\n"
+                        #     }
+                        # )
+                        # print(result.content[0].text)
                         
-                        # Add the iteration responses to the document
-                        for resp in iteration_response:
-                            result = await session.call_tool(
-                                "add_text_to_pages",
-                                arguments={
-                                    "text": f"{resp}\n\n"
-                                }
-                            )
-                            print(result.content[0].text)
+                        # # Add the iteration responses to the document
+                        # for resp in iteration_response:
+                        #     result = await session.call_tool(
+                        #         "add_text_to_pages",
+                        #         arguments={
+                        #             "text": f"{resp}\n\n"
+                        #         }
+                        #     )
+                        #     print(result.content[0].text)
                         
-                        # Save the document
-                        result = await session.call_tool(
-                            "save_pages_document",
-                            arguments={
-                                "file_name": "Math_Result.pages"
-                            }
-                        )
-                        print(result.content[0].text)
+                        # # Save the document
+                        # result = await session.call_tool(
+                        #     "save_pages_document",
+                        #     arguments={
+                        #         "file_name": "Math_Result.pages"
+                        #     }
+                        # )
+                        # print(result.content[0].text)
                         
                         # Ask for email address to send results
                         print("\nWould you like to send the results via email? (yes/no)")
